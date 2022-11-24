@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <script src="script.js"></script>
+    <div id="divDados">
+        <input type="text" id="titulo" placeholder="Digite o nome do livro">
+
+        <input tyoe="number" id="pagina" placeholder="Digite a pagina que parou">
+
+        <button onclick="enviaDados()">Adiciona livro</button>
+    </div>
+    <div id="mostraDados">
+
+        <h1>Para mostrar os dados</h1>
+        <button onclick="lerDados()">Mostra livros</button>
+    </div>
+
+    <div id="dados"></div>
+
+    <div id="deleta">
+        <input type="number" id="id" placeholder="Digite o ID do livro">
+        <button onclick="deletar()">Deletar livro</button>
+    </div>
+
+
+
+</body>
+
+</html>
