@@ -82,14 +82,20 @@ server.put("/filmes/:id", (req, res, next) => {
 server.del("/filmes/:id", (req, res, next) => {
     const idfilme = req.params.id;
 
-    console.log(idfilme)
-        / knex('filmes')
+    console.log(idfilme);
+         knex('filmes')
             .where('id', idfilme)
             .delete()
             .then((dados) => {
                 if (!dados) {
-                    return res.send(new erros.BadRequestError('Erro ao deletar o produto'));
+                    console.log("Oi");
+                    return res.send(new erros.BadRequestError('Erro ao deletar o produto') );
                 }
-                res.send(dados);
+                
+                console.log(dados);
+
+               // res.send(dados);
+                res.send("{'resposta': 'ok'}");
+
             }, next);
 });
