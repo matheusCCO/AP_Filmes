@@ -1,96 +1,95 @@
-const express = require('express');
-const server = express();
-const cors = require('cors');
+const restify = require('restify');
+const erros = require('restify-errors');
+const corsMiddleware = require('restify-cors-middleware2')
 
-const fs = require("fs");
 
-server.use(express.json());
-var ok = server.use(express.urlencoded({ extended: true }));
 
-const filmes = require("./filmes.json");
+const server = restify.createServer({
+    name: 'lojinha',
+    version: '0.1'
+});
 
-//const obj = JSON.stringify(filmes);
+const cors = corsMiddleware({
+    preflightMaxAge: 5, //Optional
+    origins: ['*'],
+    allowHeaders: ['API-Token'],
+    exposeHeaders: ['API-Token-Expiry']
+})
 
-//console.log(obj);
+server.pre(cors.preflight)
+server.use(cors.actual)
 
-server.use(cors())
-/*const novoPost = [{
-    "id": "8",
-    "nome": "Vingadores Guerra Infinita",
-    "foto": "https://i.pinimg.com/736x/63/c7/41/63c741c433aa938eadafdbd386e4e676.jpg",
-    "descricao": "Em Vingadores: Guerra Infinita, Thanos (Josh Brolin) enfim chega à Terra, disposto a reunir as Joias do Infinito. Para enfrentá-lo, os Vingadores precisam unir forças com os Guardiões da Galáxia, ao mesmo tempo em que lidam com desavenças entre alguns de seus integrantes.",
-    "elenco": "Tom Holland,Chris Evans,Scarlett Johansson,Robert Downey Jr"
-}];
 
-filmes.push(novoPost);*/
 
-fs.writeFile("./filmes.json", JSON.stringify(filmes), err => {
 
-    // Checking for errors
-    if (err) throw err;
+server.use(restify.plugins.acceptParser(server.acceptable));
+server.use(restify.plugins.queryParser());
+server.use(restify.plugins.bodyParser());
 
-    console.log("Done writing"); // Success
+
+
+server.listen(3000, function () {
+    console.log("%s excutando em %s", server.name, server.url);
+
+});
+
+const knex = require("knex")({
+    client: 'mysql',
+    connection: {
+        host: 'localhost',
+        user: 'root',
+        password: '',
+        database: 'filmes'
+    },
 });
 
 
 
-server.listen(3000, () => {
-    console.log('servidor iniciado');
+server.get("/filmes", (req, res, next) => {
+    knex('filmes').then((dados) => {
+
+        res.send(dados);
+    }, next);
 });
 
 
-server.route('/filmes').get((req, res) => res.json({
-    filmes
-}))
+server.post("/filmes", (req, res, next) => {
+    knex('filmes')
+        .insert(req.body)
+        .then((dados) => {
+            if (!dados) {
+                return res.send(new erros.BadRequestError('Erro ao inserir o produto'));
+            }
+            res.setHeader("Access-Control-Allow-Origin", "*");
+            res.send("Produto inserido");
+        }, next);
+});
 
-server.post('/filmes', (req, res) => {
-    // validar se a possição do Arry é igual ao id
-    // validar se o id criado ja existe
-    var data = {
-        "id": filmes.length + 1,
-        "titulo": req.body.titulo,
-        "pagina": req.body.pagina
-    }
-    console.log(data);
-    res.send();
-    //console.log(data)
-    filmes.push(data)
-    fs.writeFile("./filmes.json", JSON.stringify(filmes), err => {
-
-        // Checking for errors
-        if (err) throw err;
-
-        console.log("Done writing"); 
-    });
-
-    res.json('Saved user')
-})
+server.put("/filmes/:id", (req, res, next) => {
+    const idfilme = req.params.id;
+    knex('filmes')
+        .where('id', idfilme)
+        .update(req.body)
+        .then((dados) => {
+            if (!dados) {
+                return res.send(new erros.BadRequestError('Erro ao editar o produto'));
+            }
+            res.send("Produto editado");
+        }, next);
+});
 
 
-server.delete("/filmes/:id", (req, res)=>{
-    //validar uma o id com a possição do arry
-    //pois esta excluindo o id + 1
+server.del("/filmes/:id", (req, res, next) => {
+    const idfilme = req.params.id;
 
-    const id = req.params.id;
-    console.log(id);
-    
-    filmes.splice(id, 1);
-
-
-    fs.writeFile("./filmes.json", JSON.stringify(filmes), err => {
-
-        
-        if (err) throw err;
-
-        console.log("Done writing"); 
-        console.log(filmes);
-
-    });
-    res.send("ok")
-
-})
-
-server.put("filmes/:id",(req, res)=>{
-    const id = req.params.id
-    
-})
+    console.log(idfilme)
+        / knex('filmes')
+            .where('id', idfilme)
+            .delete()
+            .then((dados) => {
+                if (!dados) {
+                    return res.send(new erros.BadRequestError('Erro ao deletar o produto'));
+                }
+                res.send(dados);
+            }, next);
+});
