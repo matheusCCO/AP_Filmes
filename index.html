@@ -13,11 +13,13 @@
    
     <script src="script.js"></script>
     <div id="divDados">
-        <input type="text" id="titulo" placeholder="Digite o nome do livro">
+            <h1>Para  adicionar</h1>
+        <label>Digite o nome do Filme</label>
+        <input type="text" id="titulo">
+        <label>Digite 1 para visto ou 0 para não visto</label>
+        <input tyoe="number" id="pagina">
 
-        <input tyoe="number" id="pagina" placeholder="Digite a pagina que parou">
-
-        <button onclick="enviaDados()">Adiciona livro</button>
+        <button onclick="enviaDados()">Adiciona o Filme</button>
     </div>
     <div id="mostraDados">
 
@@ -27,15 +29,13 @@
 
     <div id="dados"></div>
 
-    <div id="deleta">
-        <input type="text" id="id" placeholder="Digite o ID do livro">
-        <button onclick="deletar()">Deletar livro</button>
-    </div>
-
     <div id="altera">
+            <h1>Para atualizar os dados</h1>
+            <label>Digite o ID do Filme</label>
         <input type="text" id="Id" placeholder="Digite o ID do livro">
+        <label>Digite 1 para visto ou 0 para não visto</label>
         <input type="number" id="Pagina" placeholder="Digite a pagina">
-        <button onclick="mudarPag()">Nova pagina</button>
+        <button onclick="mudarPag()">Atializar</button>
     </div>
 
 

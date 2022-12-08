@@ -16,6 +16,7 @@ function lerDados() {
             conteudo += '           <th>id</th>';
             conteudo += '           <th>Titulo</th>';
             conteudo += '           <th>pagina</th>';
+            conteudo += '           <th></th>';
 
 
             conteudo += '       </tr>';
@@ -33,6 +34,7 @@ function lerDados() {
                 conteudo += "    <td>" + obj[key].id + "</td>";
                 conteudo += "    <td>" + obj[key].nome + "</td>";
                 conteudo += "    <td>" + visto + "</td>";
+                conteudo += "    <td> <button onclick='deletar(" + obj[key].id +")'>Deletar</button> </td>";
 
                 conteudo += "</tr>";
 
@@ -44,7 +46,7 @@ function lerDados() {
     xhttp.open("GET", url, true);
     xhttp.send();
 }
-
+lerDados()
 
 function enviaDados() {
     var nome = document.getElementById('titulo').value;
@@ -70,14 +72,14 @@ function enviaDados() {
     return xhttp.responseText
 }
 
-
-function deletar() {
-    var id = document.getElementById("id").value;
+function deletar(id) {
+    //var id = document.getElementById("id").value;
 
     var xhttp = new XMLHttpRequest();
 
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
+            lerDados()
 
         }
     }
@@ -100,6 +102,7 @@ function mudarPag() {
 
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
+            lerDados()
             console.log("ok")
         } else {
             console.log(" erro")

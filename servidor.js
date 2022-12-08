@@ -3,7 +3,6 @@ const erros = require('restify-errors');
 const corsMiddleware = require('restify-cors-middleware2')
 
 
-
 const server = restify.createServer({
     name: 'lojinha',
     version: '0.1'
@@ -18,9 +17,6 @@ const cors = corsMiddleware({
 
 server.pre(cors.preflight)
 server.use(cors.actual)
-
-
-
 
 server.use(restify.plugins.acceptParser(server.acceptable));
 server.use(restify.plugins.queryParser());
